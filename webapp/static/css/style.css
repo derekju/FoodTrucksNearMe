@@ -1,0 +1,52 @@
+html {
+	height: 100%;
+}
+
+body {
+	background-color: #eeeeee;
+	height: 100%;
+	margin: 0;
+	padding: 0;	
+}
+
+.cb {
+	clear: both;
+}
+
+.application {
+	background-color: #ffffff;
+	height: 100%;
+	margin: 30px auto 0;
+	width: 900px;
+}
+
+.header {
+	background-color: #000000;
+	height: 66px;
+	padding: 0 15px;
+}
+
+.header-title,
+.header-subtitle {
+	color: #ffffff;
+	font-family: 'HelveticaNeue-UltraLight', 'Helvetica', 'Sans-Serif';
+	font-size: 36px;
+	float: left;
+	line-height: 66px;
+}
+
+.header-subtitle {
+	font-size: 18px;
+	line-height: 52px;
+	margin: 14px 10px 0;
+}
+
+.nav-bar {
+	height: 40px;
+}
+
+#map-canvas {
+	height: 500px;
+	padding: 0 1px;
+	width: 100%;
+}

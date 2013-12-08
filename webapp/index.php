@@ -1,0 +1,39 @@
+<?php
+
+require(__DIR__ . '/config/config.php');
+
+?>
+
+<!DOCTYPE html>
+<html
+<head>
+	<title>Food Truck Explorer</title>
+
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="static/css/style.css">
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>	
+	<script src="static/js/underscore-min.js"></script>
+ 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= GMAPS_API_KEY ?>&sensor=false"></script>	
+ 	<script src="static/js/models.js"></script>
+	<script src="static/js/application.js"></script>
+</head>
+<body>
+	<div class="application">
+		<div class="header">
+			<div class="header-title"><?= FoodTrucksNearMe\Strings::getStringByName('title') ?></div>
+			<div class="header-subtitle"><?= FoodTrucksNearMe\Strings::getStringByName('subtitle') ?></div>
+			<div class="cb"></div>
+		</div>
+		<div class="contents">
+			<div class="nav-bar"></div>
+			<div id="map-canvas"/>
+		</div>
+
+	</div>
+</body>
+</html>

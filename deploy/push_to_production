@@ -1,0 +1,2 @@
+#!/bin/bash
+rsync -vr --times --delete ../webapp/ dyju@moogli.net:~/www/foodtrucks/
