@@ -10,7 +10,8 @@ class Strings {
 	private static $strings = array(
 		'undefined' => 'Undefined',
 		'title' => 'Food Finder',
-		'subtitle' => 'by Uber'
+		'subtitle' => 'by Uber',
+		'enter_location' => 'Enter address to search'
 	);
 
 	/**

@@ -4,6 +4,8 @@ html {
 
 body {
 	background-color: #eeeeee;
+	font-family: 'HelveticaNeue-Light', 'Helvetica', 'Sans-Serif';
+	font-size: 14px;
 	height: 100%;
 	margin: 0;
 	padding: 0;	
@@ -42,7 +44,23 @@ body {
 }
 
 .nav-bar {
-	height: 40px;
+	height: 44px;
+	line-height: 44px;
+	padding: 0 5px;
+}
+
+.nav-bar .enter-location,
+.nav-bar .location-text {
+	float: left;
+}
+
+.form-override {
+	display: inline;
+	width: 300px;
+}
+
+.nav-bar .location {
+	float: right;
 }
 
 #map-canvas {

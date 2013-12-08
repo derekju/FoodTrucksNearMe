@@ -1,4 +1,16 @@
+// TODO
+// push state history for back button
+// touch icon + viewport + css media for mobile browsers
+
 var FoodTrucks = FoodTrucks || {};
+
+/**
+ * Configuration object
+ */
+FoodTrucks.Configuration = {
+	DEFAULT_LOCATION: 'San Francisco, CA',
+	DEFAULT_ZOOM: 15
+};
 
 /**
  * Wrapper for local storage
@@ -68,10 +80,10 @@ FoodTrucks.GoogleWrapper = (function () {
 			function (results, status) {
 				if (status == google.maps.GeocoderStatus.OK) {
 
-					var geoResponse = new GeocodeResponse(
+					var geoResponse = [
 						results[0].geometry.location.pb,
 						results[0].geometry.location.qb
-					);
+					];
 
 					addressCache[address] = geoResponse;
 					FoodTrucks.LocalStorage.set('addressCache', addressCache);
@@ -85,6 +97,114 @@ FoodTrucks.GoogleWrapper = (function () {
 	return me;
 })();
 
+FoodTrucks.Ajax = (function () {
+
+	var
+		me = {}
+	;
+
+	me.call = function (endpoint, params, callback) {
+		$.ajax({
+			url: 'ajax/' + endpoint + '.php',
+			data: params,
+			dataType: 'json',
+			type: 'POST',
+			success: callback
+		});
+	};
+
+	return me;
+
+})();
+
+/**
+ * Controller for all map interactions
+ */
+FoodTrucks.MapController = (function () {
+
+	var
+		me = {},
+		_gmap
+	;
+
+	me.init = function () {
+		function initialize() {
+			FoodTrucks.GoogleWrapper.callGeocodeAPI(
+				FoodTrucks.Configuration.DEFAULT_LOCATION,
+				function (result) {
+					var mapOptions = {
+						center: new google.maps.LatLng(result[0], result[1]),
+						zoom: FoodTrucks.Configuration.DEFAULT_ZOOM
+					};
+					_gmap = new google.maps.Map(
+						document.getElementById("map-canvas"),
+						mapOptions
+					);
+				}
+			);
+		}
+		google.maps.event.addDomListener(window, 'load', initialize);
+	};
+
+	me.panMapToNewAddress = function (address) {
+		FoodTrucks.GoogleWrapper.callGeocodeAPI(
+			address,
+			function (geocodeResponse) {
+				_gmap.panTo(new google.maps.LatLng(geocodeResponse[0], geocodeResponse[1]));
+
+				FoodTrucks.Ajax.call(
+					'get_foodtrucks',
+					{
+						lat: geocodeResponse[0],
+						long: geocodeResponse[1]
+					},
+					function (resultList) {
+
+					}
+				);
+			}
+		);		
+	};
+
+	return me;
+})();
+
+/**
+ * Controller for the nav bar
+ */
+FoodTrucks.NavController = (function () {
+
+	var
+		me = {}
+	;
+
+	function _submitNewAddress(address) {
+		FoodTrucks.MapController.panMapToNewAddress(address);
+	}
+
+	me.init = function () {
+		$('#address_input').keyup(function (e) {
+			if (e.keyCode == 13) {
+				_submitNewAddress(
+					$('#address_input').val()
+				);
+			}
+		});
+
+		$('#address_submit').click(function (e) {
+			_submitNewAddress(
+				$('#address_input').val()
+			);			
+		});
+
+		// Update view
+		$('.location').text(FoodTrucks.Configuration.DEFAULT_LOCATION);
+	};
+
+	return me;
+
+})();
+
 Storage.prototype.setObject = function(key, value) {
 	this.setItem(key, JSON.stringify(value));
 }
@@ -95,20 +215,6 @@ Storage.prototype.getObject = function(key) {
 }
 
 $(function () {
-	function initialize() {
-		FoodTrucks.GoogleWrapper.callGeocodeAPI(
-			'San Francisco, CA',
-			function (result) {
-				var mapOptions = {
-					center: new google.maps.LatLng(result.lat, result.long),
-					zoom: 14
-				};
-				var map = new google.maps.Map(
-					document.getElementById("map-canvas"),
-					mapOptions
-				);
-			}
-		);
-	}
-	google.maps.event.addDomListener(window, 'load', initialize);
+	FoodTrucks.NavController.init();
+	FoodTrucks.MapController.init();
 });

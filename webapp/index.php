@@ -12,14 +12,12 @@ require(__DIR__ . '/config/config.php');
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="static/css/style.css">
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>	
 	<script src="static/js/underscore-min.js"></script>
- 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= GMAPS_API_KEY ?>&sensor=false"></script>	
- 	<script src="static/js/models.js"></script>
+ 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= GMAPS_API_KEY ?>&sensor=false"></script>
 	<script src="static/js/application.js"></script>
 </head>
 <body>
@@ -30,7 +28,15 @@ require(__DIR__ . '/config/config.php');
 			<div class="cb"></div>
 		</div>
 		<div class="contents">
-			<div class="nav-bar"></div>
+			<div class="nav-bar">
+				<div class="enter-location"></div>
+				<div class="location-text">
+					<input type="text" class="form-control form-override" id="address_input" placeholder="<?= FoodTrucksNearMe\Strings::getStringByName('enter_location') ?>">
+					<button type="button" class="btn btn-default" id="address_submit">Search</button>
+				</div>
+				<div class="location"></div>
+				<div class="cb"></div>
+			</div>
 			<div id="map-canvas"/>
 		</div>
 
