@@ -1,6 +1,7 @@
 // TODO
 // push state history for back button
 // touch icon + viewport + css media for mobile browsers
+// factor out strings from this js file
 
 var FT = FT || {};
 
@@ -52,12 +53,18 @@ FT.GoogleWrapper = (function () {
 		_geocoder = null
 	;
 
+	/**
+	 * Build the address cache if it doesn't exist
+	 */
 	function _setupAddressCache() {
 		if (FT.LocalStorage.get('addressCache') == null) {
 			FT.LocalStorage.set('addressCache', {});
 		}
 	}
 
+	/**
+	 * Call the google maps geocode API with a cache wrapper
+	 */
 	me.callGeocodeAPI = function (address, callback) {
 
 		_setupAddressCache();
@@ -106,6 +113,9 @@ FT.Ajax = (function () {
 		me = {}
 	;
 
+	/**
+	 * Call an ajax endpoint with a set of parameters and a callback function
+	 */
 	me.call = function (endpoint, params, callback) {
 		$.ajax({
 			url: 'ajax/' + endpoint + '.php',
@@ -132,6 +142,9 @@ FT.MapController = (function () {
 		_markers
 	;
 
+	/**
+	 * Initialize
+	 */
 	me.init = function () {
 		_markers = [];
 
@@ -141,14 +154,21 @@ FT.MapController = (function () {
 				function (result) {
 					var mapOptions = {
 						center: new google.maps.LatLng(result[0], result[1]),
-						zoom: FT.Configuration.DEFAULT_ZOOM
+						zoom: FT.Configuration.DEFAULT_ZOOM,
+						panControl: false,
+						streetViewControl: false
 					};
 					_gmap = new google.maps.Map(
 						document.getElementById("map-canvas"),
 						mapOptions
 					);
 
-					google.maps.event.addListener(_gmap, 'idle', _mapPanned);
+					// Fire initial load
+					google.maps.event.addListenerOnce(_gmap, 'idle', _mapPanned);
+					//_mapPanned();
+
+					// Bind events
+					google.maps.event.addListener(_gmap, 'dragend', _mapPanned);
 				}
 			);
 		}
@@ -163,6 +183,9 @@ FT.MapController = (function () {
 			address,
 			function (geocodeResponse) {
 				_gmap.panTo(new google.maps.LatLng(geocodeResponse[0], geocodeResponse[1]));
+				// Calling manually instead of binding to idle event due to complications from
+				// clicking on markers causing the map to auto pan
+				_mapPanned(); 
 			}
 		);		
 	};
@@ -194,9 +217,10 @@ FT.MapController = (function () {
 				swLng: _gmap.getBounds().getSouthWest().lng()
 			},
 			function (resultList) {
-				console.log(resultList);
 
 				$('.loading-area-and-results').text(resultList.length + ' Results');
+
+				FT.ResultsTableController.setupTable();
 
 				_.each(resultList, function (element, index, list) {
 					var infoWindow = new google.maps.InfoWindow({
@@ -217,6 +241,8 @@ FT.MapController = (function () {
 						_infoWindow = infoWindow;
 						_infoWindow.open(_gmap, marker);
 					});
+
+					FT.ResultsTableController.appendEntryToTable(element);
 				});
 			}
 		);
@@ -263,6 +289,44 @@ FT.NavController = (function () {
 
 })();
 
+FT.ResultsTableController = (function () {
+
+	var
+		me = {},
+		_$node
+	;
+
+	me.init = function () {
+		_$node = $('.results-table');
+	};
+
+	me.setupTable = function () {
+		// Destroy what was there before
+		_$node.html('');
+
+		_$node.html(
+			'<table class="table table-striped">' +
+				'<tr>' +
+					'<th>Name</th>' +
+					'<th>Type of Food</th>' +
+				'</tr>' +
+			'</table>'
+		);
+	};
+
+	me.appendEntryToTable = function (entry) {
+		_$node.find('table').append(
+			'<tr>' +
+				'<td>' + entry.applicant + '</td>' +
+				'<td>' + entry.fooditems + '</td>' +
+			'</tr>'
+		);
+	};
+
+	return me;
+
+})();
+
 Storage.prototype.setObject = function(key, value) {
 	this.setItem(key, JSON.stringify(value));
 }
@@ -273,6 +337,10 @@ Storage.prototype.getObject = function(key) {
 }
 
 $(function () {
-	FT.NavController.init();
-	FT.MapController.init();
+	_.each(
+		['NavController', 'MapController', 'ResultsTableController'],
+		function (element, index, list) {
+			FT[element].init();
+		}
+	);
 });

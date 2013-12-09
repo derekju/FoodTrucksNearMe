@@ -39,7 +39,8 @@ require_once(__DIR__ . '/config/config.php');
 				<div class="loading-area-and-results"></div>
 				<div class="cb"></div>
 			</div>
-			<div id="map-canvas"/>
+			<div id="map-canvas"></div>
+			<div class="results-table"></div>
 		</div>
 
 	</div>
