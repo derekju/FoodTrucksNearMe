@@ -1,7 +1,6 @@
 // TODO
 // push state history for back button
 // touch icon + viewport + css media for mobile browsers
-// factor out strings from this js file
 
 var FT = FT || {};
 

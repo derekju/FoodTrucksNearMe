@@ -15,12 +15,6 @@ require_once(__DIR__ . '/config/config.php');
 
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
 	<link rel="stylesheet" href="static/css/style.css">
-
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>	
-	<script src="static/js/underscore-min.js"></script>
- 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= GMAPS_API_KEY ?>&sensor=false"></script>
-	<script src="static/js/application.js"></script>
 </head>
 <body>
 	<div class="application">
@@ -43,9 +37,17 @@ require_once(__DIR__ . '/config/config.php');
 			<div class="results-table"></div>
 		</div>
 	</div>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>	
+	<script src="static/js/underscore-min.js"></script>
+ 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= GMAPS_API_KEY ?>&sensor=false"></script>
+	<script src="static/js/application.js"></script>
 	<script type="text/javascript">
 	$(function() {
-		FT.Configuration.STRINGS = <?= json_encode(Strings::getAllStrings()) ?>;
+		if (typeof FT != 'undefined') {
+			FT.Configuration.STRINGS = <?= json_encode(Strings::getAllStrings()) ?>;
+		}
 	});
 	</script>
 </body>
