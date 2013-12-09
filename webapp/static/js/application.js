@@ -203,7 +203,7 @@ FT.MapController = (function () {
 
 		// Display loader
 		$('.loading-area-and-results').html(
-			'<img src="static/images/ajax-loader.gif" /><span>Loading...</span>'
+			'<img src="static/images/ajax-loader.gif" /><span>' + FT.Configuration.STRINGS.loading + '</span>'
 		);
 
 		// TODO: Put limiter on this to prevent unlimited spammy calls
@@ -218,7 +218,11 @@ FT.MapController = (function () {
 			},
 			function (resultList) {
 
-				$('.loading-area-and-results').text(resultList.length + ' Results');
+				if (resultList.length == 1) {
+					$('.loading-area-and-results').text(resultList.length + ' ' + FT.Configuration.STRINGS.result);
+				} else {
+					$('.loading-area-and-results').text(resultList.length + ' ' + FT.Configuration.STRINGS.results);
+				}
 
 				FT.ResultsTableController.setupTable();
 
@@ -307,8 +311,8 @@ FT.ResultsTableController = (function () {
 		_$node.html(
 			'<table class="table table-striped">' +
 				'<tr>' +
-					'<th>Name</th>' +
-					'<th>Type of Food</th>' +
+					'<th>' + FT.Configuration.STRINGS.name + '</th>' +
+					'<th>' + FT.Configuration.STRINGS.type_food + '</th>' +
 				'</tr>' +
 			'</table>'
 		);

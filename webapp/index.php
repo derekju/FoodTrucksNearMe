@@ -42,7 +42,11 @@ require_once(__DIR__ . '/config/config.php');
 			<div id="map-canvas"></div>
 			<div class="results-table"></div>
 		</div>
-
 	</div>
+	<script type="text/javascript">
+	$(function() {
+		FT.Configuration.STRINGS = <?= json_encode(Strings::getAllStrings()) ?>;
+	});
+	</script>
 </body>
 </html>

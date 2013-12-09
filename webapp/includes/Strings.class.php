@@ -13,7 +13,12 @@ class Strings {
 		'undefined' => 'Undefined',
 		'title' => 'Food Finder',
 		'subtitle' => 'by Uber',
-		'enter_location' => 'Enter address to search'
+		'enter_location' => 'Enter address to search',
+		'loading' => 'Loading...',
+		'name' => 'Name',
+		'type_food' => 'Type of Food',
+		'result' => 'Result',
+		'results' => 'Results'
 	);
 
 	/**
@@ -25,6 +30,13 @@ class Strings {
 		} else {
 			return self::$strings['undefined'];
 		}
+	}
+
+	/**
+	 * Returns all strings
+	 */
+	public static function getAllStrings() {
+		return self::$strings;
 	}
 
 }
