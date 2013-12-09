@@ -1,6 +1,8 @@
 <?php
 
-require(__DIR__ . '/config/config.php');
+namespace FoodTrucksNearMe;
+
+require_once(__DIR__ . '/config/config.php');
 
 ?>
 
@@ -23,18 +25,18 @@ require(__DIR__ . '/config/config.php');
 <body>
 	<div class="application">
 		<div class="header">
-			<div class="header-title"><?= FoodTrucksNearMe\Strings::getStringByName('title') ?></div>
-			<div class="header-subtitle"><?= FoodTrucksNearMe\Strings::getStringByName('subtitle') ?></div>
+			<div class="header-title"><?= Strings::getStringByName('title') ?></div>
+			<div class="header-subtitle"><?= Strings::getStringByName('subtitle') ?></div>
 			<div class="cb"></div>
 		</div>
 		<div class="contents">
 			<div class="nav-bar">
 				<div class="enter-location"></div>
 				<div class="location-text">
-					<input type="text" class="form-control form-override" id="address_input" placeholder="<?= FoodTrucksNearMe\Strings::getStringByName('enter_location') ?>">
+					<input type="text" class="form-control form-override" id="address_input" placeholder="<?= Strings::getStringByName('enter_location') ?>">
 					<button type="button" class="btn btn-default" id="address_submit">Search</button>
 				</div>
-				<div class="location"></div>
+				<div class="loading-area-and-results"></div>
 				<div class="cb"></div>
 			</div>
 			<div id="map-canvas"/>

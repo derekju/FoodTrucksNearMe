@@ -2,6 +2,8 @@
 
 namespace FoodTrucksNearMe;
 
+require_once(__DIR__ . '/../config/config.php');
+
 class Strings {
 
 	/**

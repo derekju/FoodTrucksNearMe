@@ -59,8 +59,12 @@ body {
 	width: 300px;
 }
 
-.nav-bar .location {
+.nav-bar .loading-area-and-results {
 	float: right;
+}
+
+.nav-bar .loading-area-and-results img {
+	padding-right: 5px;
 }
 
 #map-canvas {

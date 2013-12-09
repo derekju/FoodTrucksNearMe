@@ -2,20 +2,20 @@
 // push state history for back button
 // touch icon + viewport + css media for mobile browsers
 
-var FoodTrucks = FoodTrucks || {};
+var FT = FT || {};
 
 /**
  * Configuration object
  */
-FoodTrucks.Configuration = {
+FT.Configuration = {
 	DEFAULT_LOCATION: 'San Francisco, CA',
-	DEFAULT_ZOOM: 15
+	DEFAULT_ZOOM: 16
 };
 
 /**
  * Wrapper for local storage
  */
-FoodTrucks.LocalStorage = (function () {
+FT.LocalStorage = (function () {
 
 	var
 		me = {}
@@ -25,8 +25,8 @@ FoodTrucks.LocalStorage = (function () {
 	 * Retrieve from local storage with a modified key
 	 */
 	me.get = function (key) {
-		if (window.localStorage.getObject('FoodTrucks.' + key)) {
-			return window.localStorage.getObject('FoodTrucks.' + key);
+		if (window.localStorage.getObject('FT.' + key)) {
+			return window.localStorage.getObject('FT.' + key);
 		}
 		return null;
 	};
@@ -35,7 +35,7 @@ FoodTrucks.LocalStorage = (function () {
 	 * Set to local storage with a modified key
 	 */
 	me.set = function (key, value) {
-		key = 'FoodTrucks.' + key;
+		key = 'FT.' + key;
 		window.localStorage.setObject(key, value);
 	};
 
@@ -46,15 +46,15 @@ FoodTrucks.LocalStorage = (function () {
 /**
  * Wrapper for Google Maps API calls
  */
-FoodTrucks.GoogleWrapper = (function () {
+FT.GoogleWrapper = (function () {
 	var
 		me = {},
 		_geocoder = null
 	;
 
 	function _setupAddressCache() {
-		if (FoodTrucks.LocalStorage.get('addressCache') == null) {
-			FoodTrucks.LocalStorage.set('addressCache', {});
+		if (FT.LocalStorage.get('addressCache') == null) {
+			FT.LocalStorage.set('addressCache', {});
 		}
 	}
 
@@ -62,12 +62,13 @@ FoodTrucks.GoogleWrapper = (function () {
 
 		_setupAddressCache();
 
-		var addressCache = FoodTrucks.LocalStorage.get('addressCache');
+		var addressCache = FT.LocalStorage.get('addressCache');
 		if (addressCache &&
 			_.keys(addressCache).length &&
 			_.keys(addressCache).indexOf(address) != -1)
 		{
 			callback(addressCache[address]);
+			return;
 		}
 
 		if (!_geocoder) {
@@ -79,14 +80,13 @@ FoodTrucks.GoogleWrapper = (function () {
 			},
 			function (results, status) {
 				if (status == google.maps.GeocoderStatus.OK) {
-
 					var geoResponse = [
-						results[0].geometry.location.pb,
-						results[0].geometry.location.qb
+						results[0].geometry.location.lat(),
+						results[0].geometry.location.lng()
 					];
 
 					addressCache[address] = geoResponse;
-					FoodTrucks.LocalStorage.set('addressCache', addressCache);
+					FT.LocalStorage.set('addressCache', addressCache);
 
 					callback(geoResponse);
 				}
@@ -97,7 +97,10 @@ FoodTrucks.GoogleWrapper = (function () {
 	return me;
 })();
 
-FoodTrucks.Ajax = (function () {
+/**
+ * Ajax wrapper
+ */
+FT.Ajax = (function () {
 
 	var
 		me = {}
@@ -120,51 +123,104 @@ FoodTrucks.Ajax = (function () {
 /**
  * Controller for all map interactions
  */
-FoodTrucks.MapController = (function () {
+FT.MapController = (function () {
 
 	var
 		me = {},
-		_gmap
+		_gmap,
+		_infoWindow,
+		_markers
 	;
 
 	me.init = function () {
+		_markers = [];
+
 		function initialize() {
-			FoodTrucks.GoogleWrapper.callGeocodeAPI(
-				FoodTrucks.Configuration.DEFAULT_LOCATION,
+			FT.GoogleWrapper.callGeocodeAPI(
+				FT.Configuration.DEFAULT_LOCATION,
 				function (result) {
 					var mapOptions = {
 						center: new google.maps.LatLng(result[0], result[1]),
-						zoom: FoodTrucks.Configuration.DEFAULT_ZOOM
+						zoom: FT.Configuration.DEFAULT_ZOOM
 					};
 					_gmap = new google.maps.Map(
 						document.getElementById("map-canvas"),
 						mapOptions
 					);
+
+					google.maps.event.addListener(_gmap, 'idle', _mapPanned);
 				}
 			);
 		}
-		google.maps.event.addDomListener(window, 'load', initialize);
-	};
+		google.maps.event.addDomListener(window, 'load', initialize);		
+	};		
 
+	/**
+	 * Pan our map to a new address
+	 */
 	me.panMapToNewAddress = function (address) {
-		FoodTrucks.GoogleWrapper.callGeocodeAPI(
+		FT.GoogleWrapper.callGeocodeAPI(
 			address,
 			function (geocodeResponse) {
 				_gmap.panTo(new google.maps.LatLng(geocodeResponse[0], geocodeResponse[1]));
-
-				FoodTrucks.Ajax.call(
-					'get_foodtrucks',
-					{
-						lat: geocodeResponse[0],
-						long: geocodeResponse[1]
-					},
-					function (resultList) {
-
-					}
-				);
 			}
 		);		
 	};
+
+	/**
+	 * Callback for when the map has just been panned
+	 */
+	function _mapPanned() {
+
+		// Remove all old markers and reset state
+		_infoWindow = null;
+		_.each(_markers, function (element, index, list) {
+			element.setMap(null);
+		});
+
+		// Display loader
+		$('.loading-area-and-results').html(
+			'<img src="static/images/ajax-loader.gif" /><span>Loading...</span>'
+		);
+
+		// TODO: Put limiter on this to prevent unlimited spammy calls
+		// Say, call once every 500ms of idling?
+		FT.Ajax.call(
+			'get_foodtrucks',
+			{
+				neLat: _gmap.getBounds().getNorthEast().lat(),
+				neLng: _gmap.getBounds().getNorthEast().lng(),
+				swLat: _gmap.getBounds().getSouthWest().lat(),
+				swLng: _gmap.getBounds().getSouthWest().lng()
+			},
+			function (resultList) {
+				console.log(resultList);
+
+				$('.loading-area-and-results').text(resultList.length + ' Results');
+
+				_.each(resultList, function (element, index, list) {
+					var infoWindow = new google.maps.InfoWindow({
+						content: element.applicant
+					});
+
+					var marker = new google.maps.Marker({
+						position: new google.maps.LatLng(element.latitude, element.longitude),
+						map: _gmap,
+						title: element.applicant
+					});
+					_markers.push(marker);
+
+					google.maps.event.addListener(marker, 'click', function() {
+						if (_infoWindow) {
+							_infoWindow.close();
+						}
+						_infoWindow = infoWindow;
+						_infoWindow.open(_gmap, marker);
+					});
+				});
+			}
+		);
+	}
 
 	return me;
 })();
@@ -172,17 +228,22 @@ FoodTrucks.MapController = (function () {
 /**
  * Controller for the nav bar
  */
-FoodTrucks.NavController = (function () {
+FT.NavController = (function () {
 
 	var
 		me = {}
 	;
 
 	function _submitNewAddress(address) {
-		FoodTrucks.MapController.panMapToNewAddress(address);
+		FT.MapController.panMapToNewAddress(address);
 	}
 
 	me.init = function () {
+
+		$('#address_input').val(
+			FT.Configuration.DEFAULT_LOCATION
+		);
+
 		$('#address_input').keyup(function (e) {
 			if (e.keyCode == 13) {
 				_submitNewAddress(
@@ -196,9 +257,6 @@ FoodTrucks.NavController = (function () {
 				$('#address_input').val()
 			);			
 		});
-
-		// Update view
-		$('.location').text(FoodTrucks.Configuration.DEFAULT_LOCATION);
 	};
 
 	return me;
@@ -215,6 +273,6 @@ Storage.prototype.getObject = function(key) {
 }
 
 $(function () {
-	FoodTrucks.NavController.init();
-	FoodTrucks.MapController.init();
+	FT.NavController.init();
+	FT.MapController.init();
 });
