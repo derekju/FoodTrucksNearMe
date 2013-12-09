@@ -10,7 +10,8 @@ require_once(__DIR__ . '/config/config.php');
 <html>
 <head>
 	<title>Food Truck Explorer</title>
-	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="static/css/style.css" />
 </head>

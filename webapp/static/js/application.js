@@ -202,7 +202,7 @@ FT.MapController = (function () {
 
 		// Display loader
 		$('.loading-area-and-results').html(
-			'<img src="static/images/ajax-loader.gif" /><span>' + FT.Configuration.STRINGS.loading + '</span>'
+			'<img src="static/images/ajax-loader.gif" /><span class="loadingText">' + FT.Configuration.STRINGS.loading + '</span>'
 		);
 
 		// TODO: Put limiter on this to prevent unlimited spammy calls
