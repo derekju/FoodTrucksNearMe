@@ -19,7 +19,7 @@ Server is written in PHP. No PHP framework was used as I self organized the code
 
 I chose PHP since it's the language that I am most familiar with and have the most experience with. Though I would most likely choose node.js as a close second as I am a fan of using more Javascript.
 
-Client is using Backbone.js to organize the code. At first I organized the code in my own way (see /static/js/application.js) but I decided to go back and learn Backbone.js instead and found it quite pleasant and easy to use.
+Client is using Backbone.js to organize the code. At first I built the client in my own way (see /webapps/static/js/application.js) but I decided to go back and learn Backbone.js instead and found it quite pleasant and easy to use.
 
 Mobile
 ------
