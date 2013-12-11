@@ -43,6 +43,11 @@ Feel free to peruse my open github projects at https://github.com/derekju. Most 
 
 I can supply code of my actual production iOS apps on the App Store on request (Study Room, Clear Countdown).
 
+Or feel free to check out the marketing sites for them (super simple though but self designed):
+
+http://www.studyroomapp.com
+http://www.clearcountdownapp.com
+
 LinkedIn
 --------
 
