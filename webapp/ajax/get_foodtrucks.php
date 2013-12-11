@@ -12,4 +12,5 @@ $swLng = floatval($_GET['swLng']);
 
 $data = FoodTruckFinder::getTrucksInBounds($neLat, $neLng, $swLat, $swLng);
 
+header('Content-type: application/json');
 echo $data;

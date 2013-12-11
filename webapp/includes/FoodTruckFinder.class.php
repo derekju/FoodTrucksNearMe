@@ -12,7 +12,8 @@ class FoodTruckFinder {
 		$queryData = array(
 			'status' => 'APPROVED',
 			'$where' => "latitude>$swLat and latitude<$neLat and longitude>$swLng and longitude<$neLng",
-			'$select' => 'latitude,longitude,applicant,fooditems'
+			'$select' => 'latitude,longitude,applicant,fooditems',
+			'$group' => 'latitude,longitude,applicant,fooditems'
 		);
 
 		$query = http_build_query($queryData);
