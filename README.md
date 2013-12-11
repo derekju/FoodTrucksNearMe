@@ -21,6 +21,11 @@ I chose PHP since it's the language that I am most familiar with and have the mo
 
 Client is using Backbone.js to organize the code. At first I organized the code in my own way (see /static/js/application.js) but I decided to go back and learn Backbone.js instead and found it quite pleasant and easy to use.
 
+Mobile
+------
+
+I mobile optimized the UI at least for iPhone class devices using CSS media queries. Further responsive design can be added for other device classes such as higher resolution Android devices and/or tablets.
+
 Possible Improvements
 ---------------------
 
