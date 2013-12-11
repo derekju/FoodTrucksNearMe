@@ -17,7 +17,7 @@ Frameworks
 
 Server is written in PHP. No PHP framework was used as I self organized the code in the traditional way that I like organizing my PHP projects. A config file is used to specify global defines as well as sets up the project autoloader to lazy load classes as needed. Ajax endpoints are in the /ajax folder. All classes are in the /includes folder and each class is abstracted out to do only what it needs to do.
 
-I chose PHP since it's the language that I am most familiar with and have the most experience with. Though I would most likely choose node.js as a close second as I am a fan of using more Javascript.
+I chose PHP since it's the language that I am most familiar with and have the most experience with. Though I would most likely choose node.js as a close second as I am a fan of using more Javascript and the non-blocking nature of it because of the dependence on external REST endpoints.
 
 Client is using Backbone.js to organize the code. At first I built the client in my own way (see /webapps/static/js/application.js) but I decided to go back and learn Backbone.js instead and found it quite pleasant and easy to use.
 
