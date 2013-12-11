@@ -34,6 +34,7 @@ If this project were to be scaled up and more classes/functionality added, the f
 1. Compile all JS and CSS into one file respectively to reduce download size and cache on the browser
 2. Load all JS async to increase initial page rendering speed
 3. Use APC to cache the JSON from the API
+4. As long as the API is fine with it, cache in memcache the business results to reduce the amount of calls we need to make and also serve as a buffer in case the API goes down
 
 Other Code
 ----------
