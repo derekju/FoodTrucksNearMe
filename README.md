@@ -36,3 +36,8 @@ Other Code
 Feel free to peruse my open github projects at https://github.com/derekju. Most are prototypes of ideas or examples that I wanted to play around with such as using node.js as a traditional REST based API as well as a Websocket server (DjuChat).
 
 I can supply code of my actual production iOS apps on the App Store on request (Study Room, Clear Countdown).
+
+LinkedIn
+--------
+
+http://www.linkedin.com/profile/view?id=55273250
