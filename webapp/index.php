@@ -37,17 +37,34 @@ require_once(__DIR__ . '/config/config.php');
 		</div>
 	</div>
 
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>	
-	<script src="static/js/underscore-min.js"></script>
+	<script type="text/template" id="table-template">
+		<table class="table table-striped">
+			<tr>
+				<th><?= Strings::getStringByName('title') ?></th>
+				<th><?= Strings::getStringByName('type_food') ?></th>
+			</tr>
+			<% _.each(listings, function (listing) { %>
+			<tr>
+				<td><%= listing.applicant %></td>
+				<td><%= listing.fooditems %></td>
+			</tr>
+			<% }); %>
+		</table>
+	</script>
+
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>	
+	<script type="text/javascript" src="static/js/underscore-min.js"></script>
+	<script type="text/javascript" src="static/js/backbone-min.js"></script>
+	<script type="text/javascript" src="static/js/backbone.localStorage-min.js"></script>
  	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= GMAPS_API_KEY ?>&sensor=false"></script>
-	<script src="static/js/application.js"></script>
+	<script type="text/javascript" src="static/js/backbone-app.js"></script>
 	<script type="text/javascript">
-	$(function() {
-		if (typeof FT != 'undefined') {
-			FT.Configuration.STRINGS = <?= json_encode(Strings::getAllStrings()) ?>;
-		}
-	});
+		$(function() {
+			if (typeof FT != 'undefined') {
+				FT.Configuration.STRINGS = <?= json_encode(Strings::getAllStrings()) ?>;
+			}
+		});
 	</script>
 </body>
 </html>

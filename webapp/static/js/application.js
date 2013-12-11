@@ -120,7 +120,7 @@ FT.Ajax = (function () {
 			url: 'ajax/' + endpoint + '.php',
 			data: params,
 			dataType: 'json',
-			type: 'POST',
+			type: 'GET',
 			success: callback
 		});
 	};
